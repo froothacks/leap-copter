@@ -25,8 +25,15 @@ class SampleListener(Leap.Listener):
 
         print pitch * 180 / math.pi, yaw * 180 / math.pi, roll * 180 / math.pi
 
+    def limit_inputs(self, angle):
+        threshold = 1/4 * math.pi
+        if angle > threshold:
+            angle = threshold
+        elif angle < -threshold:
+            angle = -threshold
+        return angle
 
-def ()
+
 def main():
     # Create a sample listener and controller
     listener = SampleListener()
