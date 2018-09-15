@@ -26,6 +26,12 @@ class SampleListener(Leap.Listener):
 
         print pitch * 180 / math.pi, yaw * 180 / math.pi, roll * 180 / math.pi
 
+    def toSerial(pitchRads, yawRads, rollRads):
+        
+    def convertRange(x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+
+
 
 def main():
     # Create a sample listener and controller
