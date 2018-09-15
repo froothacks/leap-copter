@@ -4,6 +4,7 @@ import os, sys, inspect, threading, time
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 # Windows and Linux
 arch_dir = '../lib/x64' if sys.maxsize > 2 ** 32 else '../lib/x86'
+
 sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
 
 import Leap
@@ -33,6 +34,12 @@ class SampleListener(Leap.Listener):
 
         print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
         # print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
+
+
+    def toSerial(pitchRads, yawRads, rollRads):
+        
+    def convertRange(x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 
 
 
