@@ -4,6 +4,7 @@ import os, sys, inspect, threading, time
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 # Windows and Linux
 arch_dir = '../lib/x64' if sys.maxsize > 2 ** 32 else '../lib/x86'
+
 sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
 
 import Leap
@@ -26,7 +27,6 @@ class SampleListener(Leap.Listener):
         print pitch * 180 / math.pi, yaw * 180 / math.pi, roll * 180 / math.pi
 
 
-def ()
 def main():
     # Create a sample listener and controller
     listener = SampleListener()
