@@ -11,6 +11,14 @@ import Leap
 
 class SampleListener(Leap.Listener):
 
+    def limit_inputs(self, angle):
+        threshold = 0.25 * math.pi
+        if angle > threshold:
+            angle = threshold
+        elif angle < -threshold:
+            angle = -threshold
+        return angle
+
     def on_connect(self, controller):
         print "Connected"
 
@@ -23,15 +31,9 @@ class SampleListener(Leap.Listener):
         yaw = hand.direction.yaw
         roll = hand.palm_normal.roll
 
-        print pitch * 180 / math.pi, yaw * 180 / math.pi, roll * 180 / math.pi
+        print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
+        # print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
 
-    def limit_inputs(self, angle):
-        threshold = 1/4 * math.pi
-        if angle > threshold:
-            angle = threshold
-        elif angle < -threshold:
-            angle = -threshold
-        return angle
 
 
 def main():
