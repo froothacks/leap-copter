@@ -16,7 +16,6 @@ class SampleListener(Leap.Listener):
         super(SampleListener, self).__init__()
         self.ser = None
 
-
     def limit_inputs(self, angle):
         threshold = 0.25 * math.pi
         if angle > threshold:
@@ -41,12 +40,12 @@ class SampleListener(Leap.Listener):
         pitch = self.limit_inputs(pitch)
         yaw = self.limit_inputs(yaw)
         roll = self.limit_inputs(roll)
-        print pitch, yaw, roll
+        print ">>", pitch, pitch * 180/math.pi
 
-        pitch = self.convertRange(pitch, -45, 45, 1, 255)
-        yaw = self.convertRange(yaw, -45, 45, 1, 255)
-        roll = self.convertRange(roll, -45, 45, 1, 255)
-        print pitch, yaw, roll
+        pitch = self.convertRange(pitch, -45, 45)
+        yaw = self.convertRange(yaw, -45, 45)
+        roll = self.convertRange(roll, -45, 45)
+        print pitch
 
         self.toSerial(pitch, yaw, roll)
 
@@ -57,8 +56,7 @@ class SampleListener(Leap.Listener):
         time.sleep(0.05)
         self.ser.write(b"o")
 
-
-    def convertRange(x, in_min, in_max, out_min, out_max):
+    def convertRange(self, x, in_min, in_max, out_min=1, out_max=255):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 
 
