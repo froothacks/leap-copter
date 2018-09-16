@@ -30,12 +30,12 @@ class SampleListener(Leap.Listener):
 
     def on_frame(self, controller):
         frame = controller.frame()
-        radsPi = math.pi/4
+        radsPi = math.pi / 4
         hands = frame.hands
         hand = hands[0]
         if not hand.is_valid:
             # Turn control to HELP
-            self.toSerial(0,0,0)
+            self.toSerial(0, 0, 0)
 
         pitch = hand.direction.pitch
         yaw = hand.direction.yaw
