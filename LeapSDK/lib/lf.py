@@ -1,5 +1,6 @@
 import math
 import os, sys, inspect, threading, time
+import serial
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 # Windows and Linux
@@ -33,15 +34,19 @@ class SampleListener(Leap.Listener):
         roll = hand.palm_normal.roll
 
         print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
-        # print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
-
+        self.toSerial(self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll))
 
     def toSerial(self, pitchRads, yawRads, rollRads):
-        pass
-        
+        ser = serial.Serial()
+        ser.baudrate = 19200
+        ser.port = 'COM11'
+        data = ["P", pitchRads, "R", rollRads, "Y", yawRads]
+        ser.open()
+        ser.write(data)
+        # serial.Serial('COM3', 38400, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
+
     def convertRange(x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-
 
 
 def main():
