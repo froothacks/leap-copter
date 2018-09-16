@@ -34,32 +34,37 @@ class SampleListener(Leap.Listener):
         hands = frame.hands
         hand = hands[0]
         if not hand.is_valid:
-            return
+            # Turn control to HELP
+            self.toSerial(0,0,0)
+
         pitch = hand.direction.pitch
         yaw = hand.direction.yaw
         roll = hand.palm_normal.roll
 
+        handpos = hand.palm_position
+        throt = handpos.y
         pitch = self.limit_inputs(pitch)
-        yaw = self.limit_inputs(yaw)
+
         roll = self.limit_inputs(roll)
-        print ">>", roll, roll * 180/math.pi
-
+        # print ">>", roll, pitch, throt
         pitch = self.convertRange(pitch, -radsPi, radsPi)
-        yaw = self.convertRange(yaw, -radsPi, radsPi)
+        throt = self.convertRange(throt, 100, 450)
         roll = self.convertRange(roll, radsPi, -radsPi)
-        print roll
+        # print roll
 
-        self.toSerial(pitch, yaw, roll)
+        self.toSerial(pitch, roll, throt)
 
-    def toSerial(self, pitchRads, yawRads, rollRads):
-        # data = [112, pitchRads, 114, rollRads, 116, yawRads]
+    def toSerial(self, pitchRads, rollRads, throttle):
+        data = [112, pitchRads, 114, rollRads, 116, throttle]
+        print data
         self.ser.reset_input_buffer()
         # return
         time.sleep(0.05)
-        self.ser.write(b"o")
+        self.ser.write(data)
 
     def convertRange(self, x, in_min, in_max, out_min=1, out_max=255):
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+        r = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+        return max(min(int(r), out_max), out_min)
 
 
 def main():
