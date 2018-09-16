@@ -30,9 +30,11 @@ class SampleListener(Leap.Listener):
 
     def on_frame(self, controller):
         frame = controller.frame()
-
+        radsPi = math.pi/4
         hands = frame.hands
         hand = hands[0]
+        if not hand.is_valid:
+            return
         pitch = hand.direction.pitch
         yaw = hand.direction.yaw
         roll = hand.palm_normal.roll
@@ -40,12 +42,12 @@ class SampleListener(Leap.Listener):
         pitch = self.limit_inputs(pitch)
         yaw = self.limit_inputs(yaw)
         roll = self.limit_inputs(roll)
-        print ">>", pitch, pitch * 180/math.pi
+        print ">>", roll, roll * 180/math.pi
 
-        pitch = self.convertRange(pitch, -45, 45)
-        yaw = self.convertRange(yaw, -45, 45)
-        roll = self.convertRange(roll, -45, 45)
-        print pitch
+        pitch = self.convertRange(pitch, -radsPi, radsPi)
+        yaw = self.convertRange(yaw, -radsPi, radsPi)
+        roll = self.convertRange(roll, radsPi, -radsPi)
+        print roll
 
         self.toSerial(pitch, yaw, roll)
 
@@ -57,7 +59,7 @@ class SampleListener(Leap.Listener):
         self.ser.write(b"o")
 
     def convertRange(self, x, in_min, in_max, out_min=1, out_max=255):
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 
 def main():
