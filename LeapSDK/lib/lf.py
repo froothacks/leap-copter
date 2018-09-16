@@ -36,7 +36,8 @@ class SampleListener(Leap.Listener):
         # print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
 
 
-    def toSerial(pitchRads, yawRads, rollRads):
+    def toSerial(self, pitchRads, yawRads, rollRads):
+        pass
         
     def convertRange(x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
