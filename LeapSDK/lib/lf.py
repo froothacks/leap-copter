@@ -33,8 +33,17 @@ class SampleListener(Leap.Listener):
         yaw = hand.direction.yaw
         roll = hand.palm_normal.roll
 
-        print self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll)
-        self.toSerial(self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll))
+        pitch = self.limit_inputs(pitch)
+        yaw = self.limit_inputs(yaw)
+        roll = self.limit_inputs(roll)
+        print pitch, yaw, roll
+
+        pitch = self.convertRange(pitch, -45, 45, 1, 255)
+        yaw = self.convertRange(yaw, -45, 45, 1, 255)
+        roll = self.convertRange(roll, -45, 45, 1, 255)
+        print pitch, yaw, roll
+
+        self.toSerial(pitch, yaw, roll)
 
     def toSerial(self, pitchRads, yawRads, rollRads):
         ser = serial.Serial()
