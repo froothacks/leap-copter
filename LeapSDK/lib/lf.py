@@ -25,7 +25,7 @@ class SampleListener(Leap.Listener):
         return angle
 
     def on_connect(self, controller):
-        self.ser = serial.Serial('COM4', 9600)
+        self.ser = serial.Serial('COM7', 38400)
         print "Connected"
 
     def on_frame(self, controller):
@@ -36,6 +36,7 @@ class SampleListener(Leap.Listener):
         if not hand.is_valid:
             # Turn control to HELP
             self.toSerial(0, 0, 0)
+            return
 
         pitch = hand.direction.pitch
         yaw = hand.direction.yaw
@@ -46,10 +47,9 @@ class SampleListener(Leap.Listener):
         pitch = self.limit_inputs(pitch)
 
         roll = self.limit_inputs(roll)
-        # print ">>", roll, pitch, throt
-        pitch = self.convertRange(pitch, -radsPi, radsPi)
+        pitch = self.convertRange(pitch, radsPi, -radsPi)
         throt = self.convertRange(throt, 100, 450)
-        roll = self.convertRange(roll, radsPi, -radsPi)
+        roll = self.convertRange(roll, -radsPi, radsPi)
         # print roll
 
         self.toSerial(pitch, roll, throt)
@@ -57,10 +57,8 @@ class SampleListener(Leap.Listener):
     def toSerial(self, pitchRads, rollRads, throttle):
         data = [112, pitchRads, 114, rollRads, 116, throttle]
         print data
-        self.ser.reset_input_buffer()
-        # return
-        time.sleep(0.05)
         self.ser.write(data)
+        time.sleep(0.05)
 
     def convertRange(self, x, in_min, in_max, out_min=1, out_max=255):
         r = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
