@@ -12,6 +12,10 @@ import Leap
 
 
 class SampleListener(Leap.Listener):
+    def __init__(self):
+        super(SampleListener, self).__init__()
+        self.ser = None
+
 
     def limit_inputs(self, angle):
         threshold = 0.25 * math.pi
@@ -22,6 +26,7 @@ class SampleListener(Leap.Listener):
         return angle
 
     def on_connect(self, controller):
+        self.ser = serial.Serial('COM4', 9600)
         print "Connected"
 
     def on_frame(self, controller):
@@ -37,13 +42,12 @@ class SampleListener(Leap.Listener):
         self.toSerial(self.limit_inputs(pitch), self.limit_inputs(yaw), self.limit_inputs(roll))
 
     def toSerial(self, pitchRads, yawRads, rollRads):
-        ser = serial.Serial()
-        ser.baudrate = 19200
-        ser.port = 'COM11'
-        data = ["P", pitchRads, "R", rollRads, "Y", yawRads]
-        ser.open()
-        ser.write(data)
-        # serial.Serial('COM3', 38400, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
+        # data = [112, pitchRads, 114, rollRads, 116, yawRads]
+        self.ser.reset_input_buffer()
+        # return
+        time.sleep(0.05)
+        self.ser.write(b"o")
+
 
     def convertRange(x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
